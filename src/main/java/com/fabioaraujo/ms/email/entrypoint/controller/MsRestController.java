@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/ms/hello")
-public class MsController {
+public class MsRestController {
     @GetMapping
     public String doYouHearMe(){
         return "I Hear you 🥰";

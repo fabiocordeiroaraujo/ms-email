@@ -14,16 +14,19 @@ public class EmailModel {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private UUID id;
+
     private String owner;
     private String addressFrom;
     private String addressTo;
+    private String addressCc;
+    private String addressBcc;
     private String subject;
     @Column(columnDefinition = "TEXT")
     private String body;
     private LocalDateTime date;
+    @Enumerated(EnumType.STRING)
     private Status status;
 
-    public EmailModel() {
-        // Default constructor
-    }
+    private int retryCount;
+    private LocalDateTime lastRetryDate;
 }

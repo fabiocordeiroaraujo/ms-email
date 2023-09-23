@@ -1,5 +1,7 @@
 package com.fabioaraujo.ms.email.core.vo;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class EmailAddress {
@@ -36,5 +38,13 @@ public class EmailAddress {
     @Override
     public String toString() {
         return address;
+    }
+
+    public static List<String> convertToAddressList(List<EmailAddress> emailAddresses) {
+        List<String> addressList = new ArrayList<>();
+        for (EmailAddress emailAddress : emailAddresses) {
+            addressList.add(emailAddress.getAddress());
+        }
+        return addressList;
     }
 }

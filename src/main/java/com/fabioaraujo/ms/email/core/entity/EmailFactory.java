@@ -1,16 +1,21 @@
 package com.fabioaraujo.ms.email.core.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class EmailFactory {
     private String id;
     private String owner;
     private String from;
-    private String to;
+    private List<String> to;
+    private List<String> cc;
+    private List<String> bcc;
     private String subject;
     private String body;
     private LocalDateTime date;
     private Status status;
+    private int retryCount;
+    private LocalDateTime lastRetryDate;
 
     public EmailFactory withId(String id) {
         this.id = id;
@@ -27,8 +32,18 @@ public class EmailFactory {
         return this;
     }
 
-    public EmailFactory withTo(String to) {
+    public EmailFactory withTo(List<String> to) {
         this.to = to;
+        return this;
+    }
+
+    public EmailFactory withCc(List<String> cc) {
+        this.cc = cc;
+        return this;
+    }
+
+    public EmailFactory withBcc(List<String> bcc) {
+        this.bcc = bcc;
         return this;
     }
 
@@ -52,10 +67,20 @@ public class EmailFactory {
         return this;
     }
 
+    public EmailFactory withRetryCount(int retryCount) {
+        this.retryCount = retryCount;
+        return this;
+    }
+
+    public EmailFactory withLastRetryDate(LocalDateTime lastRetryDate) {
+        this.lastRetryDate = lastRetryDate;
+        return this;
+    }
+
     public Email build() {
         if (this.id != null)
-            return new Email(this.id, this.owner, this.from, this.to, this.subject, this.body, this.date, this.status);
+            return new Email(this.id, this.owner, this.from, this.to, this.cc, this.bcc, this.subject, this.body, this.date, this.status, this.retryCount, this.lastRetryDate);
         else
-            return new Email(this.owner, this.from, this.to, this.subject, this.body, this.date);
+            return new Email(this.owner, this.from, this.to, this.cc, this.bcc, this.subject, this.body, this.date);
     }
 }

@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/ms")
-public class EmailController {
+public class EmailRestController {
 
     @Autowired
     private final SendEmail sendEmail;
@@ -28,10 +28,10 @@ public class EmailController {
     @Autowired
     private final GetByOwner getByOwner;
 
-    public EmailController(SendEmail sendEmail,
-                           GetById getById,
-                           GetAll getAll,
-                           GetByOwner getByOwner) {
+    public EmailRestController(SendEmail sendEmail,
+                               GetById getById,
+                               GetAll getAll,
+                               GetByOwner getByOwner) {
         this.sendEmail = sendEmail;
         this.getById = getById;
         this.getAll = getAll;
@@ -40,7 +40,7 @@ public class EmailController {
 
     @PostMapping("/sending-email")
     public ResponseEntity<EmailResponseDto> sendingEmail(@RequestBody @Valid EmailRequestDto request) {
-        Email email = sendEmail.execute(request.getOwner(), request.getFrom(), request.getTo(), request.getSubject(), request.getBody());
+        Email email = sendEmail.execute(request.getOwner(), request.getFrom(), request.getTo(), request.getCc(), request.getBcc(), request.getSubject(), request.getBody());
         return ResponseEntity.ok(EmailResponseDto.from(email));
     }
 
@@ -51,7 +51,7 @@ public class EmailController {
     }
 
     @GetMapping("/owner/{owner}")
-    public ResponseEntity<List<EmailResponseDto>> getByUsername(@PathVariable String owner) {
+    public ResponseEntity<List<EmailResponseDto>> getByOwner(@PathVariable String owner) {
         List<Email> emails = getByOwner.execute(owner);
         List<EmailResponseDto> responseList = emails.stream()
                 .map(EmailResponseDto::from)

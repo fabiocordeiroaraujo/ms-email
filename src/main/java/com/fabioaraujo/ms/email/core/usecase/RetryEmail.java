@@ -8,30 +8,35 @@ import com.fabioaraujo.ms.email.core.entity.Status;
 import com.fabioaraujo.ms.email.core.exception.EmailBodyException;
 import com.fabioaraujo.ms.email.core.exception.EmailServerException;
 import com.fabioaraujo.ms.email.core.exception.EmailValidationException;
+import com.fabioaraujo.ms.email.core.vo.EmailAddress;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
-public class SendEmail {
+public class RetryEmail {
 
     private final EmailRepository emailRepository;
     private final EmailGateway emailGateway;
 
-    public SendEmail(EmailRepository emailRepository, EmailGateway emailGateway) {
+    public RetryEmail(EmailRepository emailRepository, EmailGateway emailGateway) {
         this.emailRepository = emailRepository;
         this.emailGateway = emailGateway;
     }
 
-    public Email execute(String owner, String from, List<String> to, List<String> cc, List<String> bcc, String subject, String body) {
+    public void execute(UUID id, String owner, String from, List<EmailAddress> to, List<EmailAddress> cc, List<EmailAddress> bcc, String subject, String body, int retryCount) {
         Email email = new EmailFactory()
+                .withId(id.toString())
                 .withOwner(owner)
                 .withFrom(from)
-                .withTo(to)
-                .withCc(cc)
-                .withBcc(bcc)
+                .withTo(EmailAddress.convertToAddressList(to))
+                .withCc(EmailAddress.convertToAddressList(cc))
+                .withBcc(EmailAddress.convertToAddressList(bcc))
                 .withSubject(subject)
                 .withBody(body)
                 .withDate(LocalDateTime.now())
+                .withRetryCount(++retryCount)
+                .withLastRetryDate(LocalDateTime.now())
                 .build();
         try {
             emailGateway.send(email);
@@ -49,6 +54,6 @@ public class SendEmail {
             System.out.println(Status.GENERAL_ERROR);
             email.setStatus(Status.GENERAL_ERROR);
         }
-        return emailRepository.save(email);
+        emailRepository.update(email);
     }
 }

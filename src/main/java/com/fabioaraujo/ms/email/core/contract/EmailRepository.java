@@ -7,7 +7,9 @@ import java.util.UUID;
 
 public interface EmailRepository {
     Email save(Email email);
+    Email update(Email email);
     List<Email> findAll();
     Email findById(UUID emailId);
     List<Email> findByOwner(String owner);
+    List<Email> findEmailsForRetry(int maxRetryCount);
 }

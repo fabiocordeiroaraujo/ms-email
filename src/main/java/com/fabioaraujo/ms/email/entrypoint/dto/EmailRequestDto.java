@@ -2,7 +2,11 @@ package com.fabioaraujo.ms.email.entrypoint.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class EmailRequestDto {
@@ -14,9 +18,11 @@ public class EmailRequestDto {
     @Email
     private String from;
 
-    @NotBlank
-    @Email
-    private String to;
+    @NotNull
+    @Size(min = 1)
+    private List<String> to;
+    private List<String> cc;
+    private List<String> bcc;
 
     @NotBlank
     private String subject;
